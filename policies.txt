@@ -1,0 +1,8 @@
+1 Life_Policy 5yrs 5000 10000
+
+2 Travel_Policy 3yrs 4500 7000
+
+3 Home_Policy 7yrs 3500 6000
+
+4 Car_Policy 5yrs 10000 15000
+
