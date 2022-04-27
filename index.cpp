@@ -63,7 +63,6 @@ void Queries ::storeQueries()
     fout.open(filename, ios::app | ios::out | ios::binary);
 
     fout << this->question << endl;
-    // fout.write((char*)this,sizeof(*this));
 
     fout.close();
 }
@@ -199,7 +198,7 @@ int updatePolicyStatus(int option, string status, string str)
     string word = "";
     int num = 0;
     int count = 0;
-    str += " ";
+    str += " "; // [2 TravlePolicy approved]
     for (int i = 0; i < str.length(); i++)
     {
         char x = str[i];
@@ -250,7 +249,7 @@ void updateStatusApproval(int option, string status, string filename, string cus
     fstream fin;
     fstream fin2;
     string line;
-    auto filename1 = filename;
+    // customer_name.append(".txt");
 
     fin.open(filename, ios::in | ios::binary);
     fin2.open("temp.txt", ios::out);
@@ -258,10 +257,10 @@ void updateStatusApproval(int option, string status, string filename, string cus
     while (getline(fin, line))
     {
         int res = updatePolicyStatus(option, status, line); // "Life_Policy 5yrs"  , "Life_Policy"
-        cout << "res" << res << endl;
+
         if (res)
         {
-            fin2 << arr[0] << " " << arr[1] << " " << arr[2] << endl;
+            fin2 << arr[0] << " " << arr[1] << " " << arr[2] << "\n";
         }
         else
         {
@@ -271,13 +270,27 @@ void updateStatusApproval(int option, string status, string filename, string cus
 
     fin.close();
     fin2.close();
-    cout << (customer_name + ".txt").c_str() << endl;
-    remove((customer_name + ".dat").c_str());
 
-    rename("temp.txt", (customer_name + ".dat").c_str());
+    fin.open(filename, std::ofstream::out | std::ofstream::trunc);
+    fin2.open("temp.txt", ios::in | ios::binary);
+    while (getline(fin2, line))
+    {
+        string lt = line;
+        if (lt.length() == 0)
+        {
+            cout << line << endl;
+        }
+        else
+        {
+            fin << line << "\n";
+        }
+    }
+    fin.close();
+
+    remove("temp.txt");
 }
 //-------------------- update policy status ----------------
-void updateStatus(int option, string filename, string customer_name)
+void updateStatus(string filename, string customer_name)
 {
     int choice;
     int policyNumber;
@@ -630,12 +643,8 @@ void delete_Policy()
     {
 
         int res = getSubString(line, name); // "Life_Policy 5yrs"  , "Life_Policy"
-        // cout << "res" << res << endl;
-        if (res)
-        {
-            cout << res << endl;
-        }
-        else
+
+        if (!res)
         {
             fin2 << line << endl;
         }
@@ -771,7 +780,7 @@ void Customers()
     cin >> customer_name;
     ifstream fin2;
     string filename = customer_name;
-    filename.append(".dat");
+    filename.append(".txt");
     string line2;
 
     fin2.open(filename, ios::in | ios::binary);
@@ -789,7 +798,7 @@ void Customers()
     switch (option)
     {
     case 1:
-        updateStatus(option, filename, customer_name);
+        updateStatus(filename, customer_name);
         break;
 
     case 2:
@@ -809,6 +818,7 @@ void BackControls::UserLogin(string name)
     int choice;
     BackControls B1;
     cout << "Hey, Here are few policies we offer" << endl;
+    cout << "------------Please select a Policy---------" << endl;
     cout << "1.Life Policy" << endl;
     cout << "2.Travel Policy" << endl;
     cout << "3.Car Policy" << endl;
@@ -850,7 +860,7 @@ void BackControls::Admin_access()
 
     cout << "1.Customers\n";
     cout << "2.View Policies\n";
-    cout << "3.TotalView Policy Holders\n";
+    cout << "3.TotalView Policy Holders\n"; //
     cout << "4.Logout\n";
     cin >> choice;
     cout << endl;
@@ -896,7 +906,6 @@ void BackControls::Admin_Login()
     while (input >> u >> p)
     {
         if (u == user && p == pass)
-
         {
             count = 1;
             system("cls");
@@ -914,7 +923,7 @@ void BackControls::Admin_Login()
         cout << "\nLOGIN ERROR\n";
 
         inncorrectAdminPassword = 1;
-        cout << inncorrectAdminPassword << endl;
+
         Admin_Login();
     }
 }
@@ -958,7 +967,7 @@ void User_Login()
     {
         cout << "\nLOGIN ERROR\nPlease check your username and password\n";
 
-        sleep_for(50ns);
+        sleep_for(100ns);
         sleep_until(system_clock::now() + 1s);
         User_Login();
     }
